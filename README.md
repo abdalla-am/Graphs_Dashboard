@@ -34,4 +34,5 @@
    - shinyDarkmode
    - shinyWidgets
    - plotly
-    
+
+## **What is expected to see when running the project :👁👁**
