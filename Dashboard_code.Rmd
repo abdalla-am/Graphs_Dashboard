@@ -1,29 +1,421 @@
----
-title: "Untitled"
-output: html_document
-date: "2024-02-11"
----
+library(shinydashboard)
+library(shiny)
+library(shinyjs)
+library(ggplot2)
+library(dplyr)
+library(corrplot)
+library(DT)
+library(shinyDarkmode)
+library(shinyWidgets)
+library(plotly)  # Add the plotly library
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+#load and read data
+data_path <- "data.csv"
+data <- read.csv(data_path)
 
-## R Markdown
+#getting no of records of data
+num_rows <- nrow(data)
+print(num_rows)
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+# Convert Date Recorded to Date format and getting a subset from the big dataset
+data$Date.Recorded <- as.Date(data$Date.Recorded, format = "%m/%d/%Y")
+df <- data[!duplicated(data$Date.Recorded), ]
 
-```{r cars}
-summary(cars)
-```
+#informing about unique towns
+unique_Towns <- unique(df$Town)
+print(length(unique_Towns))
 
-## Including Plots
+#getting the shape of data (Rows no ,columns no. and col names)
+print(nrow(df))
+print(ncol(df))
+print(colnames(df))
 
-You can also embed plots, for example:
+#getting the missing values of all columns 
+missing_values <- colSums(is.na(df))
+print(missing_values)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+#summary for each column
+print(summary(df))
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+#---------------------------------------------------------------------------------------------------------------------
+
+# Helper function to display modal instructions
+showInstructions <- function() {
+  showModal(
+    modalDialog(
+      title = "Dashboard Instructions",
+      "Welcome to the Dashboard!",
+      "Here are some instructions on how to use the charts:",
+      tags$ul(
+        tags$li("Select the charts you want to display using the checkboxes in the sidebar."),
+        tags$li("Toggle between light and dark modes using the 'Dark Mode' switch."),
+        tags$li("Use the dropdowns and input controls to filter and customize each chart."),
+        tags$li("Hover over the 'i' (information) icon on each chart for additional details.")
+      ),
+      footer = tagList(
+        actionButton("closeModal", "Got It!", class = "btn-primary")
+      )
+    )
+  )
+}
+
+#----------------------------------------------------------------------------------------------------------------------
+ui <- dashboardPage(
+  dashboardHeader(title = "My dashboard"),
+  dashboardSidebar(
+    use_darkmode(),
+    checkboxGroupInput("show_plots", "Select Plots to Display:",
+                       choices = c("Bar_chart", "Line_plot", "Density_plot", "Box_plot", "Pie_chart", "Histogram", "Heatmap","multi_bar_chart"),
+                       selected = c("Bar_chart", "Line_plot", "Density_plot", "Box_plot", "Pie_chart", "Histogram", "Heatmap","multi_bar_chart")),
+    checkboxInput("use_entire_dataset", "Use Entire Dataset", value = FALSE),
+    tags$div(prettySwitch("togglemode", "Dark Mode", value = FALSE, fill = TRUE, status = "info")),
+    selectInput("town_filter", "Select Town:", choices = c("", unique_Towns)),
+    # Information button
+    actionButton("infoButton", "ℹ️ Instructions")
+  ),
+  dashboardBody(
+    useShinyjs(),
+    
+    #to fix the side bar
+    tags$style(HTML("
+    /* Custom CSS to make the sidebar fixed */
+    .skin-blue .main-sidebar {
+      position: fixed;
+      overflow-y: auto;
+    }
+
+    .content-wrapper {
+      margin-left: 230px; /* Adjust the margin based on your sidebar width */
+    }
+  ")),
+    
+    #------------------------------------------  Barchart(Bar_chart) ------------------------------------------------
+    fluidRow(
+      id = "Bar_chart_row",
+      p("Bar_chart"),
+      sidebarLayout(
+        sidebarPanel(
+          selectInput("x_variable_Bar_chart", "Select X Variable:", choices = c("Property.Type","Residential.Type","Town"), selected = "Property.Type")
+        ),
+        mainPanel(
+          plotlyOutput("Bar_chart",height ="300px" )  # Use plotlyOutput instead of plotOutput
+        )
+      ),
+      style = "display: none;",
+      style = "background-color: white;height:350px"
+    ),
+    hr(),
+    #------------------------------------------  linePlot(Line_plot) ------------------------------------------------
+    fluidRow(
+      id = "Line_plot_row",
+      p("Line_plot"),
+      sidebarLayout(
+        sidebarPanel(
+          div(p("Dashboard tab content chart7")),
+          dateRangeInput("date_range_Line_plot", "Select Date Range:",
+                         start = min(data$Date.Recorded),
+                         end = max(data$Date.Recorded))
+        ),
+        mainPanel(
+          plotlyOutput("Line_plot", width = "100%", height = "300px")  # Use plotlyOutput instead of plotOutput
+        )
+      ),
+      style = "display: none;",
+      style = "background-color: white;height:350px"
+    ),
+    hr(),
+    #--------------------------------------DensityPlot(Plot3)----------------------------------------------------
+    fluidRow(
+      id = "Density_plot_row",
+      column(
+        width = 12,
+        tags$p("Density_Plot"),
+        sidebarLayout(
+          sidebarPanel(
+            # Add a slider for log scale
+            sliderInput("log_scale", "Log Scale", min = 0, max = 1, value = 0, step = 0.1)
+          ),
+          mainPanel(
+            plotOutput("Density_plot", width = "600px", height = "300px")
+            # Add the plotOutput for the density plot
+          )
+        )
+      ),
+      style = "background-color: white;height:350px",
+      hr()
+    ),
+    hr(),
+    #----------------------------------BoxPlot(Plot4)---------------------------------------------------
+    fluidRow(
+      id = "Box_plot_row",
+      p("Box_plot"),
+      sidebarLayout(
+        sidebarPanel(
+          
+        ),
+        mainPanel(
+          plotlyOutput("Box_plot", width = "600px", height = "300px")  # Use plotlyOutput instead of plotOutput
+        )
+      ),
+      style = "display: none;",
+      style = "background-color: white;height:350px"
+    ),
+    hr(),
+    #-----------------------------------PieChart(plot5)-------------------------------------------------
+    fluidRow(
+      id = "Pie_chart_row",
+      p("Pie_chart"),
+      sidebarLayout(
+        sidebarPanel(
+          
+          # Use radioButtons with label and text input
+          radioButtons("displayType", "Display as:", choices = c("Percentage" = "percent", "Number" = "number"), selected = "percent")
+        ),
+        mainPanel(
+          plotlyOutput("Pie_chart", width = "600px", height = "300px")  # Use plotlyOutput instead of plotOutput
+        )
+      ),
+      style = "display: none;",
+      style = "background-color: white;height:350px"
+    ),
+    hr(),
+    #-----------------------------------------Histogram(Plot6)------------------------------------------------
+    fluidRow(
+      id = "Histogram_row",
+      p("Histogram"),
+      sidebarLayout(
+        sidebarPanel(
+          
+        ),
+        mainPanel(
+          plotlyOutput("Histogram", width = "600px", height = "300px")  # Use plotlyOutput instead of plotOutput
+        )
+      ),
+      style = "display: none;",
+      style = "background-color: white;height:350px"
+    ),
+    hr(),
+    
+    #------------------------------------------HeatMap(Plot7)----------------------------------------------
+    fluidRow(
+      id = "Heatmap_row",
+      p("Heatmap"),
+      sidebarLayout(
+        sidebarPanel(
+         
+          
+        ),
+        mainPanel(
+          plotOutput("Heatmap",width="600px",height ="300px")
+          #plot
+        )
+      ),
+      style = "display: none;",
+      style = "background-color: white;height:350px",
+      hr()
+    ),
+    #-------------------------------------------Multi-bar-Chart(plot8)--------------------------------------------
+    fluidRow(
+      id = "multi_bar_chart_row",
+      p("multi_bar_chart"),
+      sidebarLayout(
+        sidebarPanel(
+          
+          
+        ),
+        mainPanel(
+          plotOutput("multi_bar_chart",width="600px",height ="300px"),
+          #plot
+        )
+      ),
+      style = "display: none;",
+      style = "background-color: white;height:350px",
+      hr()
+    )
+  
+  )
+)
+   
+  
+
+
+    #--------------------------------------------------------------------------------------------------------------
+
+server <- function(input, output, session) {
+  darkmode_toggle(inputid = 'togglemode')
+  
+  # Define a reactive expression for filtered data
+  filtered_data <- reactive({
+    filtered_df <- df
+    if (!is.null(input$town_filter) && input$town_filter != "") {
+      filtered_df <- filtered_df[filtered_df$Town == input$town_filter, ]
+    }
+    # Check if the user wants to use the entire dataset
+    if (input$use_entire_dataset) {
+      return(df)
+    } else {
+      return(filtered_df)
+    }
+  })
+  
+  
+  
+  #----------------------------------------------Rendering our visualization charts------------------------------
+  
+  
+  
+  #Render Barchart
+  output$Bar_chart <- renderPlotly({
+    ggplot(data = df, aes(x = .data[[input$x_variable_Bar_chart]])) +
+      geom_bar(stat = "count", fill = "steelblue") +
+      ggtitle("Distribution of Selected Variable") +
+      xlab(input$x_variable_Bar_chart) +
+      ylab("Count") +
+      theme_minimal() 
+  })
+  
+  #Render LinePlot
+  output$Line_plot <- renderPlotly({
+    filtered_df <- data[data$Date.Recorded >= input$date_range_Line_plot[1] & data$Date.Recorded <= input$date_range_Line_plot[2], ]
+    tmp_df <- aggregate(Assessed.Value ~ List.Year, data = filtered_df, FUN = median)
+    
+    # Use plot_ly for interactive plot
+    plot_ly(data = tmp_df, x = ~List.Year, y = ~Assessed.Value, type = 'scatter', mode = 'lines') %>%
+      layout(title = "Assessed Value Over List Year",
+             xaxis = list(title = "List Year"),
+             yaxis = list(title = "Median Assessed Value"))
+  })
+  
+  #Render DensityPlot
+  output$Density_plot <- renderPlot({
+    ggplot(df, aes(x = Sale.Amount)) +
+      geom_density(color = "blue", size = 1) +
+      labs(
+        title = "Density Plot of Sale Amount",
+        x = "Sale Amount",
+        y = "Density"
+      ) +
+      scale_x_continuous(trans = if (input$log_scale > 0) "log2" else "identity")
+    # Use a continuous scale for x-axis with log transformation if log_scale is greater than 0
+  })
+  
+  #Render BoxPlot
+  output$Box_plot <- renderPlotly({
+    filtered_df <- filtered_data()
+    ggplotly(ggplot(filtered_df, aes(x = filtered_df$Property.Type, y = Sale.Amount / 100000)) +
+               geom_boxplot() +
+               stat_summary(fun = "mean", geom = "point", shape = 8, size = 2, color = "pink") +
+               labs(title = "Box Plot",
+                    x = "Property type",
+                    y = "SaleAmount*100,000") +
+               scale_y_log10())
+  })
+  
+  #Render Piechart
+  output$Pie_chart <- renderPlotly({
+    filtered_df <- filtered_data()
+    average_rt <- filtered_df %>%
+      group_by(Residential.Type) %>%
+      summarise(average_sales_ratio = mean(Sales.Ratio, na.rm = TRUE))
+    
+    colors <- rainbow(nrow(average_rt))
+    
+    # Use reactiveValues to store the display type
+    display_type <- reactiveValues(type = "percentage")
+    
+    # Conditionally format labels based on the selected option
+    labels <- if (input$displayType == "percent") {
+      percent_labels <- scales::percent(average_rt$average_sales_ratio)
+      paste(average_rt$Residential.Type, percent_labels)
+    } else {
+      number_labels <- round(average_rt$average_sales_ratio, 2)
+      paste(average_rt$Residential.Type, number_labels)
+    }
+    
+    plot_ly(labels = labels, values = average_rt$average_sales_ratio, type = 'pie', marker = list(colors = colors), textinfo = 'label+percent', textposition = 'outside', hole = 0.3) %>%
+      layout(title = "Pie Chart for Average Sales Ratio for Residential Type")
+  })
+  
+  #Render Histogram
+  output$Histogram <- renderPlotly({
+    filtered_df <- filtered_data()
+    ggplotly(ggplot(filtered_df, aes(x = Sale.Amount)) +
+               geom_histogram(binwidth = 0.2, fill = "orange", color = "black", alpha = 0.7) +
+               geom_point(stat = "count", color = "blue", alpha = 0.5, position = position_jitter(width = 0.2, height = 0)) +
+               labs(
+                 title = "Distribution of Sale Amount with Bins and Scatter",
+                 x = "Sale Amount",
+                 y = "Count"
+               ) +
+               scale_x_log10())
+  })
+  
+  #Render Multi-Bar-Chart
+  output$multi_bar_chart <- renderPlot({
+    # Group by Property_Type and List_Year, calculate the count (or any other metric)
+    chart_data <- df %>%
+      group_by(Property.Type, List.Year) %>%
+      summarise(Count = n())  # You can replace 'Count' with any other metric
+    
+    # Plot the multi-bar chart
+    ggplot(chart_data, aes(x = List.Year, y = Count, fill = Property.Type)) +
+      geom_bar(stat = "identity", position = "dodge") +
+      labs(title = "Multi-Bar Chart of Property Types Over List Years",
+           x = "List Year",
+           y = "Count") +
+      theme_minimal()
+  })
+  
+  #Render Heatmap
+  correlation_matrix <- cor(select(df, Assessed.Value, Sale.Amount, Sales.Ratio, Years.until.sold), use = "complete.obs")
+  output$Heatmap <- renderPlot({
+    print(correlation_matrix)  # طباعة قيمة correlation_matrix للتحقق
+    corrplot(correlation_matrix, method = "color", type = "upper", tl.cex = 0.7)
+  })
+  
+  
+  observe({
+    df$Sale.Amount <- pmax(df$Sale.Amount, 0.01)
+  })
+  
+  
+  
+  
+  
+  observeEvent(input$infoButton, {
+    showInstructions()
+  })
+  
+  # Close modal when "Got It!" button is clicked
+  observeEvent(input$closeModal, {
+    removeModal()
+  })
+  
+  
+  
+  
+  
+  
+  observe({
+    togglePlotRow <- function(plot_name, display) {
+      plot_row_id <- paste0(plot_name, "_row")
+      if (plot_name %in% input$show_plots) {
+        shinyjs::toggle(id = plot_row_id, condition = display)
+      } else {
+        shinyjs::toggle(id = plot_row_id, condition = FALSE)
+      }
+    }
+    
+    togglePlotRow("Bar_chart", TRUE)
+    togglePlotRow("Line_plot", TRUE)
+    togglePlotRow("Density_plot", TRUE)
+    togglePlotRow("Box_plot", TRUE)
+    togglePlotRow("Pie_chart", TRUE)
+    togglePlotRow("Histogram", TRUE)
+    togglePlotRow("Heatmap", TRUE)
+    togglePlotRow("multi_bar_chart",TRUE)
+  })
+}
+
+shinyApp(ui = ui, server = server)
