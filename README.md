@@ -16,10 +16,22 @@
 <br>
 <br>
 
-## **Project requirements 🤔**
+## **Project requirements description 🤔**
 <br>
-<img src="https://raw.githubusercontent.com/abdalla-am/Graphs_Dashboard/main/Readme%20photos/req%201.png?token=GHSAT0AAAAAACOB7UZ6W2RS5GC6YXWJZXNQZOJFV5Q" width="700" height="700"/>
-<img src="https://raw.githubusercontent.com/abdalla-am/Graphs_Dashboard/main/Readme%20photos/req%202.png?token=GHSAT0AAAAAACOB7UZ6YGPXT5XWJMO53H7IZOJFWFQ" width="700" height="700"/>
+<img src="https://raw.githubusercontent.com/abdalla-am/Graphs_Dashboard/main/Readme%20photos/req%201.png?token=GHSAT0AAAAAACOB7UZ7NGKBRFES775QHPVUZOJF54A" width="500" height="600"/>
+<img src="https://raw.githubusercontent.com/abdalla-am/Graphs_Dashboard/main/Readme%20photos/req%202.png?token=GHSAT0AAAAAACOB7UZ6WT4KGT53C3PZKESEZOJF6PA" width="500" height="600"/>
 
 <br>
 
+## libraries used :
+   - shinydashboard
+   - shiny
+   - shinyjs
+   - ggplot2
+   - dplyr
+   - corrplot
+   - DT
+   - shinyDarkmode
+   - shinyWidgets
+   - plotly
+    
