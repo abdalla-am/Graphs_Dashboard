@@ -18,8 +18,8 @@
 
 ## **Project requirements description 🤔**
 <br>
-<img src="https://raw.githubusercontent.com/abdalla-am/Graphs_Dashboard/main/Readme%20photos/req%201.png?token=GHSAT0AAAAAACOB7UZ7NGKBRFES775QHPVUZOJF54A" width="500" height="600"/>
-<img src="https://raw.githubusercontent.com/abdalla-am/Graphs_Dashboard/main/Readme%20photos/req%202.png?token=GHSAT0AAAAAACOB7UZ6WT4KGT53C3PZKESEZOJF6PA" width="500" height="600"/>
+<img src="https://raw.githubusercontent.com/abdalla-am/Graphs_Dashboard/main/Readme%20photos/req%201.png?token=GHSAT0AAAAAACOB7UZ7NGKBRFES775QHPVUZOJF54A" width="400" height="500"/>
+<img src="https://raw.githubusercontent.com/abdalla-am/Graphs_Dashboard/main/Readme%20photos/req%202.png?token=GHSAT0AAAAAACOB7UZ6WT4KGT53C3PZKESEZOJF6PA" width="400" height="500"/>
 
 <br>
 
