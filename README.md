@@ -18,11 +18,8 @@
 
 ## **Project requirements 🤔**
 <br>
-
-![picture alt](https://github.com/abdalla-am/Cinema-tickets-reservation-WebProject/blob/main/readme_img/Screen%201.png "Screen 1")
-
-![picture alt](https://github.com/abdalla-am/Cinema-tickets-reservation-WebProject/blob/main/readme_img/Screen%202.png "Screen 2")
-![picture alt](https://github.com/abdalla-am/Cinema-tickets-reservation-WebProject/blob/main/readme_img/Screen%203.png "Screen 3")
+<img src="https://raw.githubusercontent.com/abdalla-am/Graphs_Dashboard/main/Readme%20photos/req%201.png?token=GHSAT0AAAAAACOB7UZ6W2RS5GC6YXWJZXNQZOJFV5Q" width="700" height="700"/>
+<img src="https://raw.githubusercontent.com/abdalla-am/Graphs_Dashboard/main/Readme%20photos/req%202.png?token=GHSAT0AAAAAACOB7UZ6YGPXT5XWJMO53H7IZOJFWFQ" width="700" height="700"/>
 
 <br>
 
