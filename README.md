@@ -1,2 +1,5 @@
 # Graphs_Dashboard
-viewing graphs in a simple and expressive Dashboard 
+<p>
+  Information visualization project FCIS(7th semester)
+</p>
+
