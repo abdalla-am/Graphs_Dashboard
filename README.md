@@ -37,13 +37,13 @@
 
 ## **What is expected to see when running the project :👁👁**
 <br>
-<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/1.png" width="1440" height="610"/>
-<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/2.png" width="1440" height="610"/>
-<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/3.png" width="1440" height="610"/>
-<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/4.png" width="1440" height="610"/>
+<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/1.png" width="900" height="457"/>
+<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/2.png" width="900" height="457"/>
+<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/3.png" width="900" height="457"/>
+<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/4.png" width="900" height="457"/>
 
-<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/5.png" width="1440" height="610"/>
-<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/6.png" width="1440" height="610"/>
+<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/5.png" width="900" height="457"/>
+<img src="https://github.com/abdalla-am/Graphs_Dashboard/blob/main/Readme%20photos/6.png" width="900" height="457"/>
 
 
 
